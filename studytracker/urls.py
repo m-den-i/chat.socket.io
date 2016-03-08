@@ -16,10 +16,15 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from base.urls import base_api_patterns
 from base.views import IndexView
+api_patterns = [] + \
+               base_api_patterns
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^grappelli/', include('grappelli.urls')),
-    url(r'^$', IndexView.as_view(), name='index')
+    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^api/', include(api_patterns))
 ]
+

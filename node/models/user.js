@@ -3,11 +3,11 @@
  */
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define("User", {
-    email: DataTypes.STRING
+    email: DataTypes.STRING,
+    username: DataTypes.STRING
   }, {
     tableName: 'base_member',
     timestamps: false
   });
-
   return User;
 };
