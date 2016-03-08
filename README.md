@@ -8,7 +8,7 @@
 }
 ```
 
-- Second, you should login at `/api/auth/login/` [POST]
+- Second, you should login at `/api/auth/signin/` [POST]
 ```
 {
 "username": "mail@mail.com",
