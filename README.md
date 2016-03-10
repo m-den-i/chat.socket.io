@@ -1,6 +1,6 @@
 # README #
 
-- First, you should create user at `/api/users/me/` [POST]
+- First, you should create user at `/api/users/` [POST]
 ```
 {
 "email": "mail@mail.com",
