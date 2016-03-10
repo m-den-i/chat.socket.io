@@ -1,19 +1,34 @@
 /**
  * Created by denis on 3/8/16.
  */
+var token = '';
+$.ajax({
+    type: "GET",
+    url: '/api/auth/token/',
+    success: function (data){
+        console.log(data);
+        token = data['X-Token']
+    }
+});
 var socket = io('http://25.81.215.212:3000/');
 
 socket.on('news', function (data) {
     console.log(data);
-    socket.emit('my other event', { my: 'data' });
 });
-
+socket.on('server-got-message', function (data) {
+    $('#messages').append('<li>'+ data.message + '</li>');
+});
 socket.on('connect', function(){
-    socket.emit('authentication', {token: "62b8e1df-4806-4d01-ad00-7dfbf123ef02"});
+    console.log(token);
+    socket.emit('authentication', {token: token});
     socket.on('authenticated', function() {
-        console.log('Yo!')
+        console.log('Yo!');
     });
     socket.on('unauthorized', function(err){
         console.log("Noooo!: ", err.message);
     });
 });
+
+function sendMessage(message) {
+    socket.emit('client-sent-message', {message: message})
+}

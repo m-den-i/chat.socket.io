@@ -11,6 +11,7 @@ var models = require('../models');
 require('socketio-auth')(io, {
   authenticate: function (socket, data, callback) {
     //get credentials sent by the client
+    console.log('DATA: ' + data.token);
     var token = data.token;
     models.sequelize.sync().then(function () {
       models.Token.findOne({where: {key: token}}).then(function(tokenObj){
@@ -26,14 +27,12 @@ require('socketio-auth')(io, {
 });
 
 io.on('connection', function(socket){
-  console.log('a user connected');
+  console.log('a user connected', new Date().toLocaleTimeString());
   socket.emit('news', { message: 'Hello, at localhost:3000' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
   socket.on('client-sent-message', function (data) {
-    console.log(socket.client.user, data);
+    io.sockets.emit('server-got-message', {message: socket.client.user.email + ': ' + data.message})
   })
+
 });
 
 http.listen(3000, function(){

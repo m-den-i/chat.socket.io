@@ -79,8 +79,15 @@ class Message(models.Model):
     text = models.TextField(blank=True)
     sent = models.DateTimeField(auto_now_add=True)
     conversation = models.ForeignKey('Conversation', null=True, blank=True, related_name='messages')
+    owner = models.ForeignKey('Member', related_name='messages', null=True, blank=True)
+
+    def __unicode__(self):
+        return u'' + self.text[:30]
 
 
 class Conversation(models.Model):
     name = models.CharField(max_length=256)
     members = models.ManyToManyField(Member)
+
+    def __unicode__(self):
+        return u'' + self.name

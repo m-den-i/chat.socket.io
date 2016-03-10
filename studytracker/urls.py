@@ -17,14 +17,16 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from base.urls import base_api_patterns
-from base.views import IndexView
+from base.views import LoginView, index
+
 api_patterns = [] + \
                base_api_patterns
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^grappelli/', include('grappelli.urls')),
-    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^$', index, name='index'),
+    url(r'^login/?$', LoginView.as_view(), name='login'),
     url(r'^api/', include(api_patterns))
 ]
 

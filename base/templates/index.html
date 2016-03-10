@@ -20,12 +20,9 @@
 </head>
   <body>
     <ul id="messages">
-        <li>DJS: KSJhdsghjsad</li>
-        <li>HJK: HGJHGDsgad</li>
-        <li>DJS: HGJHGDsgad</li>
     </ul>
     <div class="form-div">
-      <input id="m" autocomplete="off" /><button onclick="console.log('hdsajh')">Send</button>
+      <input id="m" autocomplete="off" /><button onclick="var m = $('#m'); sendMessage(m.val()); m.val('');">Send</button>
     </div>
   </body>
 </html>
