@@ -10,7 +10,8 @@ $.ajax({
         token = data['X-Token']
     }
 });
-var socket = io('http://25.81.215.212:3000/');
+
+var socket = io('http://192.168.72.148:3000/');
 
 socket.on('news', function (data) {
     console.log(data);

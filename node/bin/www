@@ -3,21 +3,32 @@
 /**
  * Module dependencies.
  */
+// Settings for Express server
 var app = require('../app');
+// http - instance of server
 var http = require('http').Server(app);
+// Here we create socket.io server on top of http server
 var io = require('socket.io')(http);
+// And also let's import models
 var models = require('../models');
 
+// Here we create hook to implement authentication in socket.io
+// without using querystrings to send credentials with module `socketio-auth`
+// We get socket instance where user trying to authenticate
+// and data, sent by client: there should be token. See index.html
 require('socketio-auth')(io, {
   authenticate: function (socket, data, callback) {
     //get credentials sent by the client
     console.log('DATA: ' + data.token);
     var token = data.token;
     models.sequelize.sync().then(function () {
+      // Trying to find token
       models.Token.findOne({where: {key: token}}).then(function(tokenObj){
         if (!tokenObj) return callback(new Error("Token not found."));
+        // If token is found let's found user with this token
         models.User.findOne({where: {id: tokenObj.user_id}}).then(function(userObj){
           if (!userObj) return callback(new Error("User by token not found."));
+          // Then set user to socket instance
           socket.client.user = userObj;
           return callback(null, true);
         });
@@ -26,15 +37,23 @@ require('socketio-auth')(io, {
   }
 });
 
+// This event is triggered on user connection
 io.on('connection', function(socket){
+  // We get socket instance here
+
+  // Let's log date of connection
   console.log('a user connected', new Date().toLocaleTimeString());
+  // Then send hello from server
   socket.emit('news', { message: 'Hello, at localhost:3000' });
+  // if we get from any client message
   socket.on('client-sent-message', function (data) {
+    // we should send it to others (all) sockets
     io.sockets.emit('server-got-message', {message: socket.client.user.email + ': ' + data.message})
   })
 
 });
 
+// Here we start HTTP server
 http.listen(3000, function(){
   console.log('listening on *:3000');
 });

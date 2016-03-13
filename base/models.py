@@ -74,6 +74,10 @@ class Member(PermissionsMixin, ConfirmAccountManagerMixin, AbstractBaseUser):
         """
         return self.first_name
 
+    def save(self, *args, **kwargs):
+        self.username = self.email
+        super(Member, self).save(*args, **kwargs)
+
 
 class Message(models.Model):
     text = models.TextField(blank=True)

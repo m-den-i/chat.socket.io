@@ -1,21 +1,14 @@
+// This main file which is responsible for exporting
+// module `models`. Here we export one-file-described models.
 'use strict';
 
 var fs        = require('fs');
 var path      = require('path');
 var Sequelize = require('sequelize');
 var basename  = path.basename(module.filename);
-//var env       = process.env.NODE_ENV || 'development';
-//var config    = require(__dirname + '/../config/config.json')[env];
 var config = require(__dirname + '/../config/config.json')["pg_db"];
 var db        = {};
 
-//if (config.use_env_variable) {
-//  var sequelize = new Sequelize(process.env[config.use_env_variable]);
-//} else {
-//  var sequelize = new Sequelize(config.database, config.username, config.password, config);
-//}
-
-//var sequelize = new Sequelize(config.database, config.username, config.password, config);
 var sequelize = new Sequelize('postgres://postgres:Cruelworld@localhost:5432/studytracker');
 
 fs

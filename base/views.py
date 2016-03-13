@@ -14,11 +14,18 @@ from base.permissions import IsSelfOrReadOnly, POSTOnlyIfAnonymous
 from base.serializers import ResetPasswordByEmailSerializer, UserSerializer, UsernameLoginSerializer
 
 
+# As you may see in studytracker/urls.py this view placed under /
+# Here you just get index.html page placed in base/static
+# You can reach main page only if authenticated, otherwise you are redirected at /login
 @login_required(login_url='/login/')
 def index(request):
     return render(request, 'index.html')
 
 
+# This is login view, generating(!) page with login form
+# Forms in Django are classes that describes http forms and translating into http markdown later
+# So, here you may see Login form in base/forms.py
+# If you sent valid form you'll be authenticated using http sessions and redirected to /
 class LoginView(FormView):
     template_name = 'login.html'
     form_class = LoginForm
@@ -58,6 +65,9 @@ class RetrieveSelfMixin(object):
         return super(RetrieveSelfMixin, self).get_object()
 
 
+# Here we create user instance and it is placed under /api/users/:id/ or /api/users/me/
+# Serializers - allows to encode/decode information from JSON
+# How API are created you may check in django-rest-framework (DRF) docs
 class UserViewSet(RetrieveSelfMixin,
                   ResetPasswordViewMixin,
                   mixins.RetrieveModelMixin,
@@ -84,6 +94,13 @@ class UserViewSet(RetrieveSelfMixin,
         obj = serializer.save()
 
 
+# Here we generate Token on login and delete Token on logout, connected with user instance in db as FK.
+# According to Token-based authentication client should send in HTTP header field: Authorization
+# with value: Token `some value`
+# How token authentication works exactly you may check in DRF docs and source code of drf-secure-token lib.
+# In two words, we take Token from header and try to get it from db. If it exists and connected with user instance,
+# we know which user is going to request.
+# All this placed under /api/auth/:func_name
 class UserAuthViewSet(viewsets.ViewSet):
     NEW_TOKEN_HEADER = 'X-Token'
 
